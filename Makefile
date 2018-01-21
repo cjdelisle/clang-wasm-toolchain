@@ -40,11 +40,11 @@ PROJECTS=clang libcxxabi llvm libcxx lldb clang-tools-extra libunwind compiler-r
 all: compiler-rt
 	echo "\n\n\nSet your PATH to include $(PWD)/build/bin/ and use wasm32-unknown-unknown-wasm-clang\n"
 
-projects/musl:
+projects/musl/README:
 	mkdir -p projects
 	(cd projects \
-		@$(foreach proj,$(PROJECTS),git clone $(GIT_PFX)$(proj);) && \
-		git clone https://github.com/jfbastien/musl
+		@$(foreach proj,$(PROJECTS),git clone $(GIT_PFX)$(proj);) \
+		git clone https://github.com/jfbastien/musl \
 	);
 clone: projects/musl
 
