@@ -25,7 +25,5 @@ The code which is emitted by this toolchain will require functions
     (import "env" (func $__syscall4 (param i32 i32 i32 i32 i32) (result i32)))
     (import "env" (func $__syscall5 (param i32 i32 i32 i32 i32 i32) (result i32)))
     (import "env" (func $__syscall6 (param i32 i32 i32 i32 i32 i32 i32) (result i32)))
-    (import "env" (func $__syscall_cp (param i32 i32 i32 i32 i32 i32 i32) (result i32)))
-
-Cancelable syscalls which are not implemented
+    (import "env" (func $__syscall_cp (param i32 i32 i32 i32 i32 i32 i32) (result i32))) Cancelable syscalls which are not implemented
 
