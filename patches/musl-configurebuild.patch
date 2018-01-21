@@ -1,0 +1,13 @@
+diff --git a/configure b/configure
+index fa9869d..c7dbacd 100755
+--- a/configure
++++ b/configure
+@@ -504,7 +504,7 @@ fi
+ #
+ tryflag CFLAGS_AUTO -Werror=implicit-function-declaration
+ tryflag CFLAGS_AUTO -Werror=implicit-int
+-tryflag CFLAGS_AUTO -Werror=pointer-sign
++#tryflag CFLAGS_AUTO -Werror=pointer-sign
+ tryflag CFLAGS_AUTO -Werror=pointer-arith
+ 
+ #
