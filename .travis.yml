@@ -1,13 +1,10 @@
 language: C
 script:
-  - cat /proc/cpuinfo
-  - ( while :; do free -h ; sleep 10; done ) & echo $! > ~/free_pid
   - make clone
   - make checkout
   - make patch
-  - make llvm -j 2
-  - make clang -j 2
-  - make musl -j 2
-  - make compiler-rt -j 2
+  - make llvm -j 8
+  - make clang -j 8
+  - make musl -j 8
+  - make compiler-rt -j 8
   - make test
-  - kill `cat ~/free_pid`
