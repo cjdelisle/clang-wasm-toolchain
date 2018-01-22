@@ -83,19 +83,24 @@ build/lld/bin/lld: build/llvm/bin/opt
 lld: build/lld/bin/lld
 
 build/llvm/bin/opt:
-	mkdir -p build/llvm
-	(cd ./build/llvm/ && \
+	mkdir -p build/llvm-build
+	(cd ./build/llvm-build/ && \
 		cmake $(GLOBAL_ARGS) $(LLVM_ARGS) --build ../../projects/llvm && \
-		make $(JOB_FLAG) \
+		make $(JOB_FLAG) && \
+		cmake -DCMAKE_INSTALL_PREFIX=$(PWD)/build/llvm -P cmake_install.cmake \
 	);
+	rm -rf $(PWD)/build/llvm-build/
+	
 llvm: build/llvm/bin/opt
 
 build/clang/bin/clang: build/llvm/bin/opt
-	mkdir -p build/clang;
-	(cd ./build/clang/ && \
+	mkdir -p build/clang-build;
+	(cd ./build/clang-build/ && \
 		cmake $(GLOBAL_ARGS) $(CLANG_ARGS) ../../projects/clang && \
-		make $(JOB_FLAG) \
+		make $(JOB_FLAG) && \
+		cmake -DCMAKE_INSTALL_PREFIX=$(PWD)/build/clang -P cmake_install.cmake \
 	);
+	rm -rf $(PWD)/build/clang-build/
 clang: build/clang/bin/clang
 
 build/bin/wasm32-unknown-unknown-wasm-clang: build/clang/bin/clang
@@ -127,3 +132,7 @@ build/compiler-rt/lib/libclang_rt.builtins-wasm32.a: build/clang/bin/clang build
 	);
 	mv $(PWD)/build/compiler-rt/lib/generic/*.a $(PWD)/build/compiler-rt/lib/
 compiler-rt: build/compiler-rt/lib/libclang_rt.builtins-wasm32.a
+
+a.out.wasm:
+	$(PWD)/build/bin/wasm32-unknown-unknown-wasm-clang ./test/hello.c
+test: a.out.wasm

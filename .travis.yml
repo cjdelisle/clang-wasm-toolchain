@@ -1,0 +1,10 @@
+language: C
+script:
+  - make clone
+  - make checkout
+  - make patch
+  - make llvm -j `cat /proc/cpuinfo | grep '^processor' | wc -l`
+  - make clang -j `cat /proc/cpuinfo | grep '^processor' | wc -l`
+  - make musl -j `cat /proc/cpuinfo | grep '^processor' | wc -l`
+  - make compiler-rt -j `cat /proc/cpuinfo | grep '^processor' | wc -l`
+  - make test
