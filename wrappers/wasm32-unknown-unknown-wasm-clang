@@ -19,7 +19,7 @@ nonFlagArgs = False
 for i in range(0,len(args)):
     if args[i] in ['-c', '-S', '-E', '-M', '-MM']: notLinking = True
     if args[i] in ['-nostdinc', 'nostdinc++']: noCppInclude = True
-    if args[i] == '-x' and i+1 < len(args):
+    if args[i] == '-x' and (i + 1) < len(args):
         if args[i+1].index('c++') == 0: isCpp = True
         if args[i+1].endswith('-header'): notLinking = True
     if not args[i].startswith('-'): nonFlagArgs = True

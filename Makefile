@@ -46,7 +46,7 @@ projects/musl/README:
 		$(foreach proj,$(PROJECTS),git clone $(GIT_PFX)$(proj);) \
 		git clone https://github.com/jfbastien/musl \
 	);
-clone: projects/musl
+clone: projects/musl/README
 
 update:
 	truncate -s 0 ./versions.txt
@@ -122,7 +122,8 @@ build/compiler-rt/lib/libclang_rt.builtins-wasm32.a: build/clang/bin/clang build
 		export WASM_DEBUG=1 && \
 		export WASM_LDFLAGS="-lc -nodefaultlibs" && \
 		cmake $(GLOBAL_ARGS) $(COMPILERRT_ARGS) ../../projects/compiler-rt && \
-		make all $(JOB_FLAG) \
+		make all $(JOB_FLAG) && \
+		ls $(PWD)/build/musl/lib/*.a | while read x; do $(PWD)/build/llvm/bin/llvm-ranlib $$x; done
 	);
 	mv $(PWD)/build/compiler-rt/lib/generic/*.a $(PWD)/build/compiler-rt/lib/
 compiler-rt: build/compiler-rt/lib/libclang_rt.builtins-wasm32.a

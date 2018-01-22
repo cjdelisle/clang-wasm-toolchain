@@ -10,6 +10,7 @@ Build the toolchain:
 
     make clone
     make checkout
+    make patch
     make -j8
 
 Have a cup of coffee, building a compiler just cannot be quick.
@@ -18,6 +19,19 @@ Use it:
 
     ./build/bin/wasm32-unknown-unknown-wasm-clang ./hello.c
 
+## What it contains
+
+* LLVM, clang & clang++
+* lld linker
+* musl libc for WebAssembly
+* compiler-rt
+* compiler-wrappers
+
+## What's missing
+
+* threads (everything is single threaded)
+* dynamic linking
+* libc++
 
 The code which is emitted by this toolchain will require functions 
 
