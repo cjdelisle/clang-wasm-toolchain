@@ -42,8 +42,8 @@ all: compiler-rt
 
 projects/musl/README:
 	mkdir -p projects
-	(cd projects \
-		@$(foreach proj,$(PROJECTS),git clone $(GIT_PFX)$(proj);) \
+	(cd projects && \
+		$(foreach proj,$(PROJECTS),git clone $(GIT_PFX)$(proj);) \
 		git clone https://github.com/jfbastien/musl \
 	);
 clone: projects/musl

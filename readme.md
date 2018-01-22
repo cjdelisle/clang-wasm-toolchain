@@ -2,6 +2,10 @@
 
 This is a simple toolchain for building WebAssembly code from C.
 
+Install the dependencies
+
+    apt-get install build-essential cmake
+
 Build the toolchain:
 
     make clone
