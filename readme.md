@@ -29,8 +29,13 @@ Use it:
 
 ## What's missing
 
-* threads (everything is single threaded)
+* fork()
+  * Needs support in the wasm VM (need to clone the shadow stack)
+* threads
+  * A partial implementation is likely possible without VM support using SharedArrayBuffer
+  * Thread Local Storage will be impossible without VM support
 * dynamic linking
+  * Possibly can be implemented without VM support, see [This Experiment](https://github.com/jfbastien/musl).
 * libc++
 
 The code which is emitted by this toolchain will require functions 
