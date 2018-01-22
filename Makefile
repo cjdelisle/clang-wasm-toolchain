@@ -123,7 +123,7 @@ build/compiler-rt/lib/libclang_rt.builtins-wasm32.a: build/clang/bin/clang build
 		export WASM_LDFLAGS="-lc -nodefaultlibs" && \
 		cmake $(GLOBAL_ARGS) $(COMPILERRT_ARGS) ../../projects/compiler-rt && \
 		make all $(JOB_FLAG) && \
-		ls $(PWD)/build/musl/lib/*.a | while read x; do $(PWD)/build/llvm/bin/llvm-ranlib $$x; done
+		ls $(PWD)/build/musl/lib/*.a | while read x; do $(PWD)/build/llvm/bin/llvm-ranlib $$x; done \
 	);
 	mv $(PWD)/build/compiler-rt/lib/generic/*.a $(PWD)/build/compiler-rt/lib/
 compiler-rt: build/compiler-rt/lib/libclang_rt.builtins-wasm32.a
