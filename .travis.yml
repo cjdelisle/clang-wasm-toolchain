@@ -3,8 +3,8 @@ script:
   - make clone
   - make checkout
   - make patch
-  - make llvm -j 8
-  - make clang -j 8
-  - make musl -j 8
-  - make compiler-rt -j 8
+  - make llvm -j 16
+  - make clang -j 16
+  - make musl -j 16
+  - make compiler-rt -j 16
   - make test
