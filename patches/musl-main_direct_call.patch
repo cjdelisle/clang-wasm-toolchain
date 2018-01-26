@@ -1,0 +1,27 @@
+diff --git a/src/env/__libc_start_main.c b/src/env/__libc_start_main.c
+index b5fd353..b6acd12 100644
+--- a/src/env/__libc_start_main.c
++++ b/src/env/__libc_start_main.c
+@@ -65,10 +65,22 @@ static void libc_start_init(void)
+ 
+ weak_alias(libc_start_init, __libc_start_init);
+ 
++/*
++ * In wasm, indirect calls must match function signature exactly, which is a
++ * problem because main() is defined all different ways in practice.
++ */
++#ifdef __wasm__
++#define main _unused_main
++#endif
++
+ int __libc_start_main(int (*main)(int,char **,char **), int argc, char **argv)
+ {
+ 	char **envp = argv+argc+1;
+ 
++#ifdef __wasm__
++#define main _unused_main
++#endif
++
+ 	__init_libc(envp, argv[0]);
+ 	__libc_start_init();
+ 
