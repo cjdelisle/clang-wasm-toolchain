@@ -47,7 +47,14 @@ COMPILERRT_ARGS+=-DCAN_TARGET_wasm32=ON
 GIT_PFX=https://github.com/llvm-mirror/
 PROJECTS=clang libcxxabi llvm libcxx lldb clang-tools-extra libunwind compiler-rt lld
 
-all: compiler-rt
+all:
+	make clone
+	make checkout
+	make patch
+	make llvm $(JOB_FLAG)
+	make clang $(JOB_FLAG)
+	make musl $(JOB_FLAG)
+	make compiler-rt $(JOB_FLAG)
 	echo "\n\n\nSet your PATH to include $(PWD)/build/bin/ and use wasm32-unknown-unknown-wasm-clang\n"
 
 projects/musl/README:
