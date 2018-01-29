@@ -24,6 +24,16 @@ LLD_ARGS+="-DLLVM_CONFIG_PATH=../../build/llvm/bin/llvm-config"
 
 MUSL_ARGS+="--disable-shared"
 MUSL_ARGS+="--prefix=$(PWD)/build/musl"
+MUSL_CFLAGS+="-Wno-shift-op-parentheses"
+MUSL_CFLAGS+="-Wno-string-plus-int"
+MUSL_CFLAGS+="-Wno-pointer-sign" # suppresses a werror failure
+MUSL_CFLAGS+="-Wno-ignored-attributes"
+MUSL_CFLAGS+="-Wno-bitwise-op-parentheses"
+MUSL_CFLAGS+="-Wno-logical-op-parentheses"
+MUSL_CFLAGS+="-Wno-dangling-else"
+MUSL_CFLAGS+="-Wno-unknown-pragmas"
+MUSL_CFLAGS+="-Wno-parentheses"
+
 
 COMPILERRT_ARGS+=-DLLVM_CONFIG_PATH=../../build/llvm/bin/llvm-config
 COMPILERRT_ARGS+=-DCMAKE_SYSTEM_NAME=Generic
@@ -65,6 +75,8 @@ patch:
 	ls ./projects/ | while read x; do (\
 	  echo "project $$x" && \
       cd projects/$$x && \
+	  git reset --hard && \
+	  git clean -dxf && \
 	  ls $(PWD)/patches/$$x-* 2>/dev/null | while read y; do \
 	  	echo "applying $$y" && \
 	  	git apply < $$y ; \
@@ -103,16 +115,26 @@ build/clang/bin/clang: build/llvm/bin/opt
 	rm -rf $(PWD)/build/clang-build/
 clang: build/clang/bin/clang
 
-build/bin/wasm32-unknown-unknown-wasm-clang: build/clang/bin/clang
+build/bin/wasm32-unknown-unknown-wasm-clang: build/clang/bin/clang ./wrappers/*
 	mkdir -p build/bin
-	cp ./wrappers/* ./build/bin/
+	rm -f ./build/bin/*
+	for x in cc c++ gcc g++ clang clang++; do \
+		cp ./wrappers/cc_wrapper.py ./build/bin/wasm32-unknown-unknown-wasm-$$x ; \
+	done
+	for x in ar as nm objcopy objdump ranlib readelf readobj size strings; do \
+		cp ./wrappers/generic_wrapper.py ./build/bin/wasm32-unknown-unknown-wasm-$$x ; \
+	done
+	for x in lld; do \
+		cp ./wrappers/lld_wrapper.py ./build/bin/wasm32-unknown-unknown-wasm-$$x ; \
+	done
+	cp ./wrappers/stub_strip.py ./build/bin/wasm32-unknown-unknown-wasm-strip
 wrappers: build/bin/wasm32-unknown-unknown-wasm-clang
 
 build/musl/lib/libc.a: build/bin/wasm32-unknown-unknown-wasm-clang
 	mkdir -p build/musl-build
 	(cd ./build/musl-build/ && \
-		CROSS_COMPILE="$(PWD)/build/bin/wasm32-unknown-unknown-wasm-" \
-		export CC=$(PWD)/build/bin/wasm32-unknown-unknown-wasm-clang && \
+		export CROSS_COMPILE="$(PWD)/build/bin/wasm32-unknown-unknown-wasm-" && \
+		export WASM_CFLAGS="$(MUSL_CFLAGS)" && \
 		$(PWD)/projects/musl/configure $(MUSL_ARGS) && \
 		make all install $(JOB_FLAG) \
 	)
@@ -124,7 +146,6 @@ build/compiler-rt/lib/libclang_rt.builtins-wasm32.a: build/clang/bin/clang build
 	(cd ./build/compiler-rt/ && \
 		export CC=$(PWD)/build/bin/wasm32-unknown-unknown-wasm-clang && \
 		export CXX=$(PWD)/build/bin/wasm32-unknown-unknown-wasm-clang++ && \
-		export WASM_DEBUG=1 && \
 		export WASM_LDFLAGS="-lc -nodefaultlibs" && \
 		cmake $(GLOBAL_ARGS) $(COMPILERRT_ARGS) ../../projects/compiler-rt && \
 		make all $(JOB_FLAG) && \

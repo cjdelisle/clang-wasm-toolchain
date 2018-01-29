@@ -60,6 +60,7 @@ if 'WASM_DEBUG' in os.environ:
     print >> sys.stderr, ' '.join(line)
 
 if infile and outfile:
-    print >> sys.stderr, ' ### STRIP IS UNSUPPORTED ### copying %s to %s' % (infile, outfile)
+    print >> sys.stderr, '### STRIP IS UNSUPPORTED ### copying %s to %s' % (infile, outfile)
     copyfile(infile, outfile)
-print >> sys.stderr, '### STRIP IS UNSUPPORTED ### doing nothing to %s' % (infile)
+else:
+    print >> sys.stderr, '### STRIP IS UNSUPPORTED ### doing nothing to %s' % (infile)

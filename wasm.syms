@@ -1,8 +1,3 @@
-# Symbols we want wasm.js to define at runtime
-#_Exit
-#abort
-#puts
-
 # Musl syscall interface, provided by wasm.js
 __syscall
 __syscall0
@@ -14,18 +9,12 @@ __syscall5
 __syscall6
 __syscall_cp
 
-# Symbols not supported by clang but currently expected to work on the
-# wasm waterfall
-# TODO(sbc): remove these
-#__builtin_isinff
-#__builtin_isinfl
-#__builtin_clrsb
-#__builtin_clrsbl
-#__builtin_clrsbll
-#__builtin_apply
-#__builtin_apply_args
-#__builtin_malloc
+# This can be handled with -mllvm -enable-emscripten-sjlj but that
+# creates a bunch of symbols which cannot be predicted in advance
+# so we'll just allow these
+setjmp
+sigsetjmp
+longjmp
 
-# Part of musl we still don't compile for wasm
-#setjmp
-#longjmp
+# Get argc argv and env from the wasm vm
+wasm_getenv

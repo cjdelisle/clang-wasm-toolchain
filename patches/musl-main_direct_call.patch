@@ -1,8 +1,8 @@
 diff --git a/src/env/__libc_start_main.c b/src/env/__libc_start_main.c
-index b5fd353..b6acd12 100644
+index b5fd353..8011376 100644
 --- a/src/env/__libc_start_main.c
 +++ b/src/env/__libc_start_main.c
-@@ -65,10 +65,22 @@ static void libc_start_init(void)
+@@ -65,10 +65,23 @@ static void libc_start_init(void)
  
  weak_alias(libc_start_init, __libc_start_init);
  
@@ -11,6 +11,7 @@ index b5fd353..b6acd12 100644
 + * problem because main() is defined all different ways in practice.
 + */
 +#ifdef __wasm__
++int main(int,char **,char **);
 +#define main _unused_main
 +#endif
 +
@@ -19,7 +20,7 @@ index b5fd353..b6acd12 100644
  	char **envp = argv+argc+1;
  
 +#ifdef __wasm__
-+#define main _unused_main
++#undef main
 +#endif
 +
  	__init_libc(envp, argv[0]);

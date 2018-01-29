@@ -18,18 +18,13 @@ for i in range(0,len(args)):
         if args[i+1].index('c++') == 0: isCpp = True
         if args[i+1].endswith('-header'): notLinking = True
     if not args[i].startswith('-'): nonFlagArgs = True
-    if args[i].startswith('WASM_FILENAME='):
-        fileName = args[i].replace('WASM_FILENAME=', '')
-        args[i] = ''
-    if args[i].startswith('WASM_TOOLPATH='):
-        toolPath = args[i].replace('WASM_TOOLPATH=', '')
-        args[i] = ''
 
 args.insert(0, fileName)
 tool = fileName.split('-')[-1]
 TOOL_MAP = {
     'gcc': 'clang',
     'cc': 'clang',
+    'c++': 'clang++',
     'g++': 'clang++'
 }
 if tool in TOOL_MAP: tool = TOOL_MAP[tool]
@@ -47,7 +42,7 @@ POSTARGS = [
     '-mthread-model', 'single',
     '-B' + path + 'build/bin/',
     '-idirafter', path + 'projects/kernel-headers/generic/include',
-    '-idirafter', path + 'include_asm',
+    '-I', path + 'include_asm',
     '-D__linux=1', '-D__linux__=1', '-D__gnu_linux__=1', '-Dlinux=1'
 ]
 LDFLAGS.extend([
