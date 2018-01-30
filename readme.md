@@ -29,7 +29,7 @@ Use it:
 ## What's missing/broken
 
 * **missing args** due to a bug in the linker, main(argc, argv) called as main(argc, argv, env) will
-replace argc w/ argv and argv w/ env
+replace argc w/ argv and argv w/ env. see: https://bugs.llvm.org/show_bug.cgi?id=36145
 * **argc/argv not implemented** mostly due to frustration because of the missing args bug
 * **longjmp** is not supported passing -mllvm -enable-emscripten-sjlj makes it work but creates symbols
 (invoke_*) that cannot be predicted in advance so they cannot be added to wasm.syms and thus the linker
