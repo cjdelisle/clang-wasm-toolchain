@@ -2,15 +2,14 @@
 
 This is a simple toolchain for building WebAssembly code from C.
 
+# WARNING: This is EXPERIMENTAL, you can't use it to build complex software, see "what's missing/broken"
+
 Install the dependencies
 
     apt-get install build-essential cmake
 
 Build the toolchain:
 
-    make clone
-    make checkout
-    make patch
     make -j8
 
 Have a cup of coffee, building a compiler just cannot be quick.
@@ -27,16 +26,26 @@ Use it:
 * compiler-rt
 * compiler-wrappers
 
-## What's missing
+## What's missing/broken
 
-* fork()
+* **missing args** due to a bug in the linker, main(argc, argv) called as main(argc, argv, env) will
+replace argc w/ argv and argv w/ env
+* **argc/argv not implemented** mostly due to frustration because of the missing args bug
+* **longjmp** is not supported passing -mllvm -enable-emscripten-sjlj makes it work but creates symbols
+(invoke_*) that cannot be predicted in advance so they cannot be added to wasm.syms and thus the linker
+finds them unresolved.
+* **Position Independent Executable** wasm expects to be loaded with base 0 which means any syscalls
+will have pointers that the kernel will not recognize, therefore without PIE or LTL wasm it will be
+impossible to make complex syscalls which pass unpredictable structures to the kernel (like ioctl).
+* **fork()**
   * Needs support in the wasm VM (need to clone the shadow stack)
-* threads
+* **threads**
   * A partial implementation is likely possible without VM support using SharedArrayBuffer
   * Thread Local Storage will be impossible without VM support
-* dynamic linking
+* **dynamic linking**
   * Possibly can be implemented without VM support, see [This Experiment](https://github.com/jfbastien/musl).
-* libc++
+* **libc++**
+  * Apparently this is just not completed but nothing specific is blocking it
 
 The code which is emitted by this toolchain will require functions 
 
