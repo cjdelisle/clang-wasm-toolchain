@@ -1,5 +1,7 @@
 # Clang WebAssembly Toolchain
 
+Status: out of date, unmaintained, wasm ecosystem moves *fast*, check out [wasi](https://wasi.dev/)
+
 This is a simple toolchain for building WebAssembly code from C.
 
 # WARNING: This is EXPERIMENTAL, you can't use it to build complex software, see "what's missing/broken"
